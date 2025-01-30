@@ -128,6 +128,12 @@ In this example the styles have been shortened for readability, the browser will
 
 ## Performance Analysis
 
+The current Performance Analysis is out dated.
+The expected savings for [Largest Contentful Paint (LCP)](https://web.dev/articles/lcp) is could be between `10ms` and `30ms`. The new system is no longer shown in `Fulfilled By`.
+
+<details><summary>Outdated Performance Analysis</summary>
+<p>
+
 > Test sample size of 1
 
 The below image shows the Network fetching the styles ahead of the parser identifying the required resources. 
@@ -141,6 +147,8 @@ The parser's requests for the styles are marked as `Fulfilled by` with `(prefetc
 The below image shows the Performance diagram, where the network requests start and end and what time the HTML parser starts and ends. The browser requests the styles before the parser starts, the parser later identifies the styles with note they are render blocking while the browser is already downloading the styles from the resource hints.
 
 ![Web browser performance diagram with Resource Hints](docs/web-browser-performance.webp)
+</p>
+</details>
 
 ## Contribution
 

@@ -14,12 +14,12 @@ export default defineNitroPlugin(async (nitroApp: NitroApp) => {
     const link = generateLinkHeader(html.head, {
       resources: {
         stylesheet: true,
-        // preload: false,
-        // module_preload: false,
-        // prefetch: false,
-        // images: false,
-        // fonts: false,
-        // scripts: false,
+        preload: true,
+        module_preload: true,
+        prefetch: false,
+        images: false,
+        fonts: false,
+        scripts: true,
         dns_prefetch: true,
         preconnect: true,
       },
@@ -106,7 +106,7 @@ function generateLinkHeader(head: string[], options): string | '' {
       const asMatch = attributes.match(/as="([^"]+)"/)
       const crossoriginMatch = attributes.match(/crossorigin(?:="([^"]*)")?/)
       const fetchpriorityMatch = attributes.match(/fetchpriority="([^"]+)"/i) // Case insensitive
-      let fetchpriority = fetchpriorityMatch ? fetchpriorityMatch[1] : null
+      let blocking = false
 
       if (relMatch && hrefMatch) {
         let rel = relMatch[1]
@@ -115,12 +115,12 @@ function generateLinkHeader(head: string[], options): string | '' {
         // Browser will prioritise other resources higher than CSS (which is render blocking) until the `blocking` param is standard in browsers https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Link#browser_compatibility
         const includeResource
           = (options.resources.stylesheet && rel === 'stylesheet')
-          // (options.resources.preload && rel === "preload") ||
-          // (options.resources.module_preload && rel === "modulepreload") ||
-          // (options.resources.prefetch && rel === "prefetch") ||
-          // (options.resources.images && as === "image") ||
-          // (options.resources.fonts && as === "font") ||
-          // (options.resources.scripts && as === "script") ||
+            || (options.resources.preload && rel === 'preload')
+            || (options.resources.module_preload && rel === 'modulepreload')
+            || (options.resources.prefetch && rel === 'prefetch')
+            || (options.resources.images && as === 'image')
+            || (options.resources.fonts && as === 'font')
+            || (options.resources.scripts && as === 'script')
             || (options.resources.dns_prefetch && rel === 'dns-prefetch')
             || (options.resources.preconnect && rel === 'preconnect')
 
@@ -129,18 +129,19 @@ function generateLinkHeader(head: string[], options): string | '' {
 
           // infer style and prioritise styles
           // https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Link
-          // 'stylesheet' is ignored by browser use `as="style" rel="prefetch"` instead for "Fulfilled by" credit in Network
+          // 'stylesheet' is ignored by browser use `as="style" rel="preload" blocking` with `Initiator` in Network as `Other` rather than `Parser`
           // Currently `as="style" rel="preload"` causes browser console warning as styles don't count as used
           if (rel === 'stylesheet') {
             as = 'style'
-            rel = 'prefetch'
-            fetchpriority = 'high'
+            rel = 'preload'
+            blocking = true
           }
 
-          const link = `<${hrefMatch[1]}>; rel="${rel}"${as ? `; as="${as}"` : ''}${crossoriginMatch ? '; crossorigin' : ''}${fetchpriority ? `; fetchpriority="${fetchpriority}"` : ''}`
+          const link = `<${hrefMatch[1]}>; rel="${rel}"${as ? `; as="${as}"` : ''}${crossoriginMatch ? '; crossorigin' : ''}${fetchpriorityMatch ? `; fetchpriority="${fetchpriorityMatch[1]}"` : ''}${blocking ? `; blocking` : ''}`
 
           // Build Link string
           if (linkHeader.length + link.length + 2 >= options.headerLength) {
+            // TODO: Consider adding multiple link headers for more length
             return linkHeader
           }
           if (linkHeader !== '') {
