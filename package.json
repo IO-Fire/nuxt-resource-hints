@@ -7,7 +7,9 @@
     "nuxt",
     "vue",
     "http",
-    "resource-hints"
+    "resource-hints",
+    "lcp",
+    "performance"
   ],
   "license": "MIT",
   "type": "module",
