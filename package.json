@@ -1,6 +1,6 @@
 {
   "name": "nuxt-resource-hints",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Nuxt module that adds HTTP header resource hints for resources in your Nuxt App.",
   "repository": "IO-Fire/nuxt-resource-hints",
   "keywords": [
