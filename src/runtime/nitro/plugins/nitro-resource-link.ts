@@ -1,12 +1,14 @@
 import type { OutgoingHttpHeaders } from 'node:http'
 import type { NitroApp } from 'nitropack/types'
-import { appendResponseHeader } from 'h3'
 import {
-  defineNitroPlugin,
   getResponseHeaders,
   setResponseHeaders,
+  appendResponseHeader,
+} from 'h3'
+import {
+  defineNitroPlugin,
   useStorage,
-} from '#imports'
+} from 'nitropack/runtime'
 
 export default defineNitroPlugin(async (nitroApp: NitroApp) => {
   nitroApp.hooks.hook('render:html', (html, { event }) => {

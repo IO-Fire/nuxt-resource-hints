@@ -24,7 +24,7 @@ export default defineNuxtModule<ModuleOptions>({
     const { resolve } = createResolver(import.meta.url)
 
     // Do not add the extension since the `.ts` will be transpiled to `.mjs` after `npm run prepack`
-    addServerPlugin(resolve('runtime/nitro/plugins/nitro-resource-link'))
+    addServerPlugin(resolve('./runtime/nitro/plugins/nitro-resource-link'))
 
     // Code source: https://github.com/nuxt-modules/security/blob/f824882c30875f65eba270df7c7b1f53fa4c6ad5/src/module.ts#L201-L228
     // Register init hook to add pre-rendered headers to responses
