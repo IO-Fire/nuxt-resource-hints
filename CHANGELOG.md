@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v0.0.4
+
+[compare changes](https://github.com/IO-Fire/nuxt-resource-hints/compare/v0.0.3...v0.0.4)
+
+### 🚀 Enhancements
+
+- Nuxt 4 support ([de33c44](https://github.com/IO-Fire/nuxt-resource-hints/commit/de33c44))
+
+### ❤️ Contributors
+
+- IO-Fire ([@IO-Fire](https://github.com/IO-Fire))
+
 ## v0.0.3
 
 [compare changes](https://github.com/IO-Fire/nuxt-resource-hints/compare/v0.0.2...v0.0.3)
