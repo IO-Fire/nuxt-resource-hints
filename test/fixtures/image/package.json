@@ -1,0 +1,8 @@
+{
+  "private": true,
+  "name": "basic",
+  "type": "module",
+  "dependencies": {
+    "@nuxt/image": "^2.0.0"
+  }
+}
