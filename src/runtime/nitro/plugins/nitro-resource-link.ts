@@ -109,6 +109,7 @@ function generateLinkHeader(head: string[], options): string | '' {
       const crossoriginMatch = attributes.match(/crossorigin(?:="([^"]*)")?/)
       const fetchpriorityMatch = attributes.match(/fetchpriority="([^"]+)"/i) // Case insensitive
       let blocking = false
+      let fetchpriorityOverride: null | string = null
 
       if (relMatch && hrefMatch) {
         let rel = relMatch[1]
@@ -137,9 +138,10 @@ function generateLinkHeader(head: string[], options): string | '' {
             as = 'style'
             rel = 'preload'
             blocking = true
+            fetchpriorityOverride = 'high'
           }
 
-          const link = `<${hrefMatch[1]}>; rel="${rel}"${as ? `; as="${as}"` : ''}${crossoriginMatch ? '; crossorigin' : ''}${fetchpriorityMatch ? `; fetchpriority="${fetchpriorityMatch[1]}"` : ''}${blocking ? `; blocking` : ''}`
+          const link = `<${hrefMatch[1]}>; rel="${rel}"${as ? `; as="${as}"` : ''}${crossoriginMatch ? '; crossorigin' : ''}${fetchpriorityOverride ?? fetchpriorityMatch ? `; fetchpriority="${fetchpriorityOverride ?? fetchpriorityMatch[1]}"` : ''}${blocking ? `; blocking` : ''}`
 
           // Build Link string
           if (linkHeader.length + link.length + 2 >= options.headerLength) {
