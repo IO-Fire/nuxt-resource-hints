@@ -31,8 +31,8 @@ You can learn more about resources hints at:
 
 <!-- Highlight some of the features your module provide here -->
 - 🚀&nbsp;Faster Page Loading
-- ✅&nbsp;SSR Support
-- ✅&nbsp;SSG Support
+- ✅&nbsp;Nuxt 4 Support
+- ✅&nbsp;SSR+SSG Support
 
 ## Quick Setup
 
