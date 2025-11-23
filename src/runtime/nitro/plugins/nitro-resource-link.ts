@@ -108,6 +108,7 @@ function generateLinkHeader(head: string[], options): string | '' {
       const asMatch = attributes.match(/as="([^"]+)"/)
       const crossoriginMatch = attributes.match(/crossorigin(?:="([^"]*)")?/)
       const fetchpriorityMatch = attributes.match(/fetchpriority="([^"]+)"/i) // Case insensitive
+      let imagesrcset: undefined | string;
       let blocking = false
 
       if (relMatch && hrefMatch) {
@@ -139,7 +140,27 @@ function generateLinkHeader(head: string[], options): string | '' {
             blocking = true
           }
 
-          const link = `<${hrefMatch[1]}>; rel="${rel}"${as ? `; as="${as}"` : ''}${crossoriginMatch ? '; crossorigin' : ''}${fetchpriorityMatch ? `; fetchpriority="${fetchpriorityMatch[1]}"` : ''}${blocking ? `; blocking` : ''}`
+          if (as === 'image' && rel === 'preload') {
+            /**
+             * Nuxt Image v1 & v2
+             * `preload` prop adds `<link>` tag in `<head>`
+             * Image v2 includes `imagesrcset` in `<link>` tag
+             * ```vue
+             * <NuxtImg href='...' preload />
+             * <NuxtImg href='...' :preload='{ fetchPriority: '...' }' />
+             * ```
+             * https://image.nuxt.com/usage/nuxt-img#preload
+             * ```html
+             * <link rel="preload" as="image" href="..." imagesrcset="..." fetchpriority="...">
+             * ```
+             **/
+            const imagesrcsetMatch = attributes.match(/imagesrcset(?:="([^"]*)")?/)
+            if (imagesrcsetMatch) {
+              imagesrcset = imagesrcsetMatch[1]
+            }
+          }
+
+          const link = `<${hrefMatch[1]}>; rel="${rel}"${as ? `; as="${as}"` : ''}${crossoriginMatch ? '; crossorigin' : ''}${imagesrcset ? `; imagesrcset="${imagesrcset}"` : ''}${fetchpriorityMatch ? `; fetchpriority="${fetchpriorityMatch[1]}"` : ''}${blocking ? `; blocking` : ''}`
 
           // Build Link string
           if (linkHeader.length + link.length + 2 >= options.headerLength) {
