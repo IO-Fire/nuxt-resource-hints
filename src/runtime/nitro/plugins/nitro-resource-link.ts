@@ -108,7 +108,7 @@ function generateLinkHeader(head: string[], options): string | '' {
       const asMatch = attributes.match(/as="([^"]+)"/)
       const crossoriginMatch = attributes.match(/crossorigin(?:="([^"]*)")?/)
       const fetchpriorityMatch = attributes.match(/fetchpriority="([^"]+)"/i) // Case insensitive
-      let imagesrcset: undefined | string;
+      let imagesrcset: undefined | string
       let blocking = false
 
       if (relMatch && hrefMatch) {
@@ -153,7 +153,7 @@ function generateLinkHeader(head: string[], options): string | '' {
              * ```html
              * <link rel="preload" as="image" href="..." imagesrcset="..." fetchpriority="...">
              * ```
-             **/
+             */
             const imagesrcsetMatch = attributes.match(/imagesrcset(?:="([^"]*)")?/)
             if (imagesrcsetMatch) {
               imagesrcset = imagesrcsetMatch[1]

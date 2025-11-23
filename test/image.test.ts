@@ -18,7 +18,7 @@ describe('ssr', async () => {
     const html = await $fetch('/')
     /**
      * Link to image with `<href>`, `imagesrcset`, `fetchpriority`
-     **/  
+     */
     expect(html).toMatch(/<link rel="preload" as="image" href=".+[^">]" imagesrcset=".+[^">]" fetchpriority="high">/)
   })
 
@@ -29,7 +29,7 @@ describe('ssr', async () => {
         const link = response.response.headers.get('link')
         /**
          * Link to image with `<href>`, `imagesrcset`, `fetchpriority`
-         **/  
+         */
         expect(link).toMatch(/^<.+[^>]>; rel="preload"; as="image"; imagesrcset=".+[^"]"; fetchpriority="high", <\/_nuxt\//)
       },
     })
