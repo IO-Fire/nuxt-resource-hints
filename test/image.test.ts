@@ -30,7 +30,20 @@ describe('ssr', async () => {
         /**
          * Link to image with `<href>`, `imagesrcset`, `fetchpriority`
          */
-        expect(link).toMatch(/^<.+[^>]>; rel="preload"; as="image"; imagesrcset=".+[^"]"; fetchpriority="high", <\/_nuxt\//)
+        expect(link).toMatch(/^<.+[^>]>; rel="preload"; as="image"; imagesrcset=".+[^"]"; fetchpriority="high", /)
+      },
+    })
+  })
+
+  it('returns page with link header without duplicated imagesrcset', async () => {
+    // Get response to a server-rendered page with `$fetch`.
+    await $fetch('/', {
+      onResponse: (response) => {
+        const link = response.response.headers.get('link')
+        /**
+         * Link to image with `<href>`, `fetchpriority`, no `imagesrcset`
+         */
+        expect(link).contains('</_ipx/_/srcset-test-duplicate.jpg>; rel="preload"; as="image"; fetchpriority="low", ')
       },
     })
   })

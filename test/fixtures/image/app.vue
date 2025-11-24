@@ -8,6 +8,10 @@
     :preload="{ fetchPriority: 'high' }"
     :modifiers="{ auto: 'format,compress', crop: 'faces' }"
   />
+  <NuxtImg
+    src="srcset-test-duplicate.jpg"
+    :preload="{ fetchPriority: 'low' }"
+  />
 </template>
 
 <script setup>

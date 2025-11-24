@@ -155,7 +155,13 @@ function generateLinkHeader(head: string[], options): string | '' {
              * ```
              */
             const imagesrcsetMatch = attributes.match(/imagesrcset(?:="([^"]*)")?/)
-            if (imagesrcsetMatch) {
+
+            // Only include `imagesrcset` if any URLs differ from `href`
+            if (
+              imagesrcsetMatch
+              && imagesrcsetMatch[1]
+              && isSrcsetDifferent(hrefMatch[1], imagesrcsetMatch[1])
+            ) {
               imagesrcset = imagesrcsetMatch[1]
             }
           }
@@ -179,4 +185,19 @@ function generateLinkHeader(head: string[], options): string | '' {
   }
 
   return linkHeader
+}
+
+/**
+ * Determines whether `srcset` contains URLs different from `href`
+ * Nuxt Image can add redundant URLs
+ * @param href
+ * @param srcset
+ * @returns `false` if `srcset` is redundant (all URLs match href), `true` otherwise
+ */
+function isSrcsetDifferent(href: string, srcset: string): boolean {
+  // Split srcset into individual sources (URL + descriptor)
+  const sources = srcset.split(',').map(s => s.trim().split(/\s+/)[0]) // take only URL part
+
+  // Check if any URL differs from href
+  return !sources.every(url => url === href)
 }
