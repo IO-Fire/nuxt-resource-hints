@@ -115,8 +115,9 @@ function generateLinkHeader(head: string[], options): string | '' {
         let as = asMatch ? asMatch[1] : null
         // Only `stylesheet`, `dns_prefetch` and `preconnect` are enabled.
         // Browser will prioritise other resources higher than CSS (which is render blocking) until the `blocking` param is standard in browsers https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Link#browser_compatibility
+        // Ignore stylesheets with media types
         const includeResource
-          = (options.resources.stylesheet && rel === 'stylesheet')
+          = (options.resources.stylesheet && rel === 'stylesheet' && /^(?!.*media="[^"]+").*$/.test(attributes))
             || (options.resources.preload && rel === 'preload')
             || (options.resources.module_preload && rel === 'modulepreload')
             || (options.resources.prefetch && rel === 'prefetch')
@@ -127,7 +128,7 @@ function generateLinkHeader(head: string[], options): string | '' {
             || (options.resources.preconnect && rel === 'preconnect')
 
         if (includeResource) {
-          // TODO ignore stylesheets with media queries or maybe allow 'all' or scope nuxt dir styles to be included or offer an exclude option for the media styles
+          // TODO offer module opttion to allow users to specify which media types to include
 
           // infer style and prioritise styles
           // https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Link
