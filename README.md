@@ -157,19 +157,19 @@ Preload responsive images with Nuxt Image ([@nuxt/image](https://image.nuxt.com/
 
 Using the `<NuxtImg>` component and the [`preload`](https://image.nuxt.com/usage/nuxt-img#preload) prop.
 
-Nuxt Image's `<link>` tags are copied by `nuxt-resource-hints` to the Link header. 
+Nuxt Image's `<link>` tags are copied by `nuxt-resource-hints` to the Link header.
 
 Learn more about preloading images at [https://web.dev/articles/preload-responsive-images](https://web.dev/articles/preload-responsive-images). Use cases include images above (fetch priority high) and just below (fetch priority low) the fold / carousel.
 
-#### Nuxt Image Example
+### Nuxt Image Example
 
 > [!IMPORTANT]
 > Links are only created when using [`preload`](https://image.nuxt.com/usage/nuxt-img#preload) on <NuxtImg>.
 
 ```vue
-<NuxtImg href='...' preload />
-<NuxtImg href='...' :preload='{ fetchPriority: 'low' }' />
-<NuxtImg href='...' :preload='{ fetchPriority: 'high' }' />
+<NuxtImg src='...' preload />
+<NuxtImg src='...' :preload='{ fetchPriority: 'low' }' />
+<NuxtImg src='...' :preload='{ fetchPriority: 'high' }' />
 ```
 
 ```html
