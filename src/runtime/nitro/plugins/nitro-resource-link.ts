@@ -96,6 +96,13 @@ export default defineNitroPlugin(async (nitroApp: NitroApp) => {
  */
 function generateLinkHeader(head: string[], options): string {
   const linkRegex = /<link\s([^>]+)>/g
+
+  /**
+   * Regex pattern components:
+   * - rel, href, as, fetchpriority: standard attributes requiring non-empty values
+   * - crossorigin: captures both presence and optional value (empty string allowed)
+   * Case-insensitive to handle attribute name variations
+   */
   const attrRegex = /\brel="(?<rel>[^"]+)"|\bhref="(?<href>[^"]+)"|\bas="(?<as>[^"]+)"|\b(?<crossoriginKey>crossorigin)(?:="(?<crossoriginValue>[^"]*)")?|\bfetchpriority="(?<fetchpriority>[^"]+)"/gi
 
   let linkHeader = ''
@@ -109,6 +116,7 @@ function generateLinkHeader(head: string[], options): string {
       // Single pass to extract all attributes
       for (const m of attributes.matchAll(attrRegex)) {
         for (const [key, value] of Object.entries(m.groups || {})) {
+          // Only merge values that exist to prevent overwriting with undefined
           if (value) result[key] = value
         }
       }
@@ -143,7 +151,9 @@ function generateLinkHeader(head: string[], options): string {
 
           const link = `<${result.href}>; rel="${result.rel}"${
             result.as ? `; as="${result.as}"` : ''}${
-            result.crossoriginKey
+              result.crossoriginKey
+              // Handle crossorigin attribute presence and value
+              // If value is empty or 'anonymous', use shorthand `crossorigin`
               ? `; crossorigin${(
                 (!result.crossoriginValue || result.crossoriginValue === 'anonymous')
                   ? ''
