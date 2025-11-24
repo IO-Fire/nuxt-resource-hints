@@ -151,7 +151,7 @@ function generateLinkHeader(head: string[], options): string {
 
           const link = `<${result.href}>; rel="${result.rel}"${
             result.as ? `; as="${result.as}"` : ''}${
-              result.crossoriginKey
+            result.crossoriginKey
               // Handle crossorigin attribute presence and value
               // If value is empty or 'anonymous', use shorthand `crossorigin`
               ? `; crossorigin${(
