@@ -199,7 +199,7 @@ The below image shows the Performance diagram, where the network requests start 
 [license-src]: https://img.shields.io/npm/l/nuxt-resource-hints.svg?style=flat&colorA=020420&colorB=00DC82
 [license-href]: https://npmjs.com/package/nuxt-resource-hints
 
-[nuxt-src]: https://img.shields.io/badge/Nuxt-020420?logo=nuxt.js
+[nuxt-src]: https://img.shields.io/badge/Nuxt-020420?logo=nuxt
 [nuxt-href]: https://nuxt.com
 
 [coderabbit-pr-reviews]: https://img.shields.io/coderabbit/prs/github/IO-Fire/nuxt-resource-hints?utm_source=oss&utm_medium=github&utm_campaign=IO-Fire%2Fnuxt-resource-hints&labelColor=020420&color=00DC82&link=https%3A%2F%2Fcoderabbit.ai&label=CodeRabbit+Reviews
