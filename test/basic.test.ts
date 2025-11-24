@@ -18,7 +18,20 @@ describe('ssr', async () => {
     await $fetch('/', {
       onResponse: (response) => {
         const link = response.response.headers.get('link')
-        expect(link).toContain('</_nuxt/entry.xWPGQPTh.css>; rel="preload"; as="style"; crossorigin; blocking, </_nuxt/')
+        expect(link).toContain('</_nuxt/entry.xWPGQPTh.css>; rel="preload"; as="style"; crossorigin; blocking,')
+      },
+    })
+  })
+
+  it('returns crossorigin attributes in link header', async () => {
+    // Get response to a server-rendered page with `$fetch`.
+    await $fetch('/', {
+      onResponse: (response) => {
+        const link = response.response.headers.get('link')
+        expect(link).toContain('</test-crossorigin-use-credentials.js>; rel="preload"; as="script"; crossorigin="use-credentials",')
+        expect(link).toContain('</test-crossorigin-empty.js>; rel="preload"; as="script"; crossorigin,')
+        expect(link).toContain('</test-crossorigin-anonymous.js>; rel="preload"; as="script"; crossorigin,')
+        expect(link).toContain('</test-crossorigin-none.js>; rel="preload"; as="script",')
       },
     })
   })
