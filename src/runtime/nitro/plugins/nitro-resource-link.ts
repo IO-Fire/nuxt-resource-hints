@@ -127,11 +127,14 @@ function generateLinkHeader(head: string[], options): string {
         if (result.rel === 'preload') {
           if (result.as === 'script' && options.resources.scripts) {
             includePreload = true
-          } else if (result.as === 'font' && options.resources.fonts) {
+          }
+          else if (result.as === 'font' && options.resources.fonts) {
             includePreload = true
-          } else if (result.as === 'image' && options.resources.images) {
+          }
+          else if (result.as === 'image' && options.resources.images) {
             includePreload = true
-          } else if (result.as === 'style' && options.resources.stylesheet) {
+          }
+          else if (result.as === 'style' && options.resources.stylesheet) {
             includePreload = true
           }
         }
