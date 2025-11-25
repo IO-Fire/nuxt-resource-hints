@@ -5,5 +5,13 @@
     "../../../dist",
     "../../../test",
     "../../../playground"
-  ]
+  ],
+  "compilerOptions": {
+    "target": "ES2023",        // Regex groups
+    "lib": ["ES2023"],         // No DOM
+    "module": "ESNext",        // Nuxt uses ESM
+    "moduleResolution": "Node",
+    // "strict": true,
+    // "esModuleInterop": true
+  }
 }
