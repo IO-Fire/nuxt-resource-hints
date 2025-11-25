@@ -43,7 +43,7 @@ describe('ssr', async () => {
         /**
          * Link to image with `<href>`, `fetchpriority`, no `imagesrcset`
          */
-        expect(link).contains('</_ipx/_/srcset-test-duplicate.jpg>; rel="preload"; as="image"; fetchpriority="low", ')
+        expect(link).toContain('</_ipx/_/srcset-test-duplicate.jpg>; rel="preload"; as="image"; fetchpriority="low", ')
       },
     })
   })
