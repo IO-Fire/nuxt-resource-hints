@@ -122,14 +122,25 @@ function generateLinkHeader(head: string[], options): string {
       }
 
       if (result.rel && result.href) {
+        // Derive includePreload for granular per-type toggles
+        let includePreload = false
+        if (result.rel === 'preload') {
+          if (result.as === 'script' && options.resources.scripts) {
+            includePreload = true
+          } else if (result.as === 'font' && options.resources.fonts) {
+            includePreload = true
+          } else if (result.as === 'image' && options.resources.images) {
+            includePreload = true
+          } else if (result.as === 'style' && options.resources.stylesheet) {
+            includePreload = true
+          }
+        }
+
         const includeResource
           = (options.resources.stylesheet && result.rel === 'stylesheet')
-            || (options.resources.preload && result.rel === 'preload')
+            || includePreload
             || (options.resources.module_preload && result.rel === 'modulepreload')
             || (options.resources.prefetch && result.rel === 'prefetch')
-            || (options.resources.images && result.as === 'image')
-            || (options.resources.fonts && result.as === 'font')
-            || (options.resources.scripts && result.as === 'script')
             || (options.resources.dns_prefetch && result.rel === 'dns-prefetch')
             || (options.resources.preconnect && result.rel === 'preconnect')
 
