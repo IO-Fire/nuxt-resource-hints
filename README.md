@@ -12,6 +12,7 @@ Find and replace all on all files (CMD+SHIFT+F):
 [![npm version][npm-version-src]][npm-version-href]
 [![npm downloads][npm-downloads-src]][npm-downloads-href]
 [![License][license-src]][license-href]
+[![CodeRabbit][coderabbit-pr-reviews]][coderabbit-pr-reviews-href]
 [![Nuxt][nuxt-src]][nuxt-href]
 
 Nuxt module that adds HTTP header resource hints for resources in your Nuxt App. 
@@ -198,5 +199,8 @@ The below image shows the Performance diagram, where the network requests start 
 [license-src]: https://img.shields.io/npm/l/nuxt-resource-hints.svg?style=flat&colorA=020420&colorB=00DC82
 [license-href]: https://npmjs.com/package/nuxt-resource-hints
 
-[nuxt-src]: https://img.shields.io/badge/Nuxt-020420?logo=nuxt.js
+[nuxt-src]: https://img.shields.io/badge/Nuxt-020420?logo=nuxt
 [nuxt-href]: https://nuxt.com
+
+[coderabbit-pr-reviews]: https://img.shields.io/coderabbit/prs/github/IO-Fire/nuxt-resource-hints?utm_source=oss&utm_medium=github&utm_campaign=IO-Fire%2Fnuxt-resource-hints&labelColor=020420&color=00DC82&link=https%3A%2F%2Fcoderabbit.ai&label=CodeRabbit+Reviews
+[coderabbit-pr-reviews-href]: https://www.coderabbit.ai/
