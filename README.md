@@ -34,6 +34,7 @@ You can learn more about resources hints at:
 - 🚀&nbsp;Faster Page Loading
 - ✅&nbsp;Nuxt 4 Support
 - ✅&nbsp;SSR+SSG Support
+- 🖼️&nbsp;Nuxt Image Support
 
 ## Quick Setup
 
@@ -150,6 +151,36 @@ The below image shows the Performance diagram, where the network requests start 
 ![Web browser performance diagram with Resource Hints](docs/web-browser-performance.webp)
 </p>
 </details>
+
+## Nuxt Image
+
+Preload responsive images with Nuxt Image ([@nuxt/image](https://image.nuxt.com/)).
+
+Using the `<NuxtImg>` component and the [`preload`](https://image.nuxt.com/usage/nuxt-img#preload) prop.
+
+Nuxt Image's `<link>` tags are copied by `nuxt-resource-hints` to the Link header.
+
+Learn more about preloading images at [https://web.dev/articles/preload-responsive-images](https://web.dev/articles/preload-responsive-images). Use cases include images above (fetch priority high) and just below (fetch priority low) the fold / carousel.
+
+### Nuxt Image Example
+
+> [!IMPORTANT]
+> Links are only created when using [`preload`](https://image.nuxt.com/usage/nuxt-img#preload) on <NuxtImg>.
+
+```vue
+<NuxtImg src="..." preload />
+<NuxtImg src="..." :preload="{ fetchPriority: 'low' }" />
+<NuxtImg src="..." :preload="{ fetchPriority: 'high' }" />
+```
+
+```html
+<link rel="preload" as="image" href="..." imagesrcset="...">
+<link rel="preload" as="image" href="..." imagesrcset="..." fetchpriority="low">
+<link rel="preload" as="image" href="..." imagesrcset="..." fetchpriority="high">
+```
+
+> [!NOTE]
+> Recommend: Nuxt Image 2.0.0 or higher for `imagesrcset` support.
 
 ## Contribution
 

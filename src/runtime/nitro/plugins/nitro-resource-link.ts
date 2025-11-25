@@ -19,7 +19,7 @@ export default defineNitroPlugin(async (nitroApp: NitroApp) => {
         preload: true,
         module_preload: true,
         prefetch: false,
-        images: false,
+        images: true,
         fonts: false,
         scripts: true,
         dns_prefetch: true,
@@ -103,7 +103,7 @@ function generateLinkHeader(head: string[], options): string {
    * - crossorigin: captures both presence and optional value (empty string allowed)
    * Case-insensitive to handle attribute name variations
    */
-  const attrRegex = /\brel="(?<rel>[^"]+)"|\bhref="(?<href>[^"]+)"|\bas="(?<as>[^"]+)"|\b(?<crossoriginKey>crossorigin)(?:="(?<crossoriginValue>[^"]*)")?|\bfetchpriority="(?<fetchpriority>[^"]+)"/gi
+  const attrRegex = /\brel="(?<rel>[^"]+)"|\bhref="(?<href>[^"]+)"|\bas="(?<as>[^"]+)"|\b(?<crossoriginKey>crossorigin)(?:="(?<crossoriginValue>[^"]*)")?|\bfetchpriority="(?<fetchpriority>[^"]+)"|\bimagesrcset="(?<imagesrcset>[^"]+)"/gi
 
   let linkHeader = ''
 
@@ -133,6 +133,27 @@ function generateLinkHeader(head: string[], options): string {
           }
           else if (result.as === 'image' && options.resources.images) {
             includePreload = true
+
+            // Nuxt Image v1 & v2
+            // `preload` prop adds `<link>` tag in `<head>`
+            // Image v2 includes `imagesrcset` in `<link>` tag
+            // ```vue
+            // <NuxtImg href="..." preload />
+            // <NuxtImg href="..." :preload="{ fetchPriority: '...' }" />
+            // ```
+            // https://image.nuxt.com/usage/nuxt-img#preload
+            // ```html
+            // <link rel="preload" as="image" href="..." imagesrcset="..." fetchpriority="...">
+            // ```
+
+            // Only include `imagesrcset` if any URLs differ from `href`
+            if (
+              result.imagesrcset
+              && isSrcsetSame(result.href, result.imagesrcset)
+            ) {
+              // Remove redundant imagesrcset
+              result.imagesrcset = undefined
+            }
           }
           else if (result.as === 'style' && options.resources.stylesheet) {
             includePreload = true
@@ -172,7 +193,7 @@ function generateLinkHeader(head: string[], options): string {
                 (!result.crossoriginValue || result.crossoriginValue === 'anonymous')
                   ? ''
                   : `="${result.crossoriginValue}"`)}`
-              : ''}${
+              : ''}${result.imagesrcset ? `; imagesrcset="${result.imagesrcset}"` : ''}${
             result.fetchpriority ? `; fetchpriority="${result.fetchpriority}"` : ''}${
             blocking ? '; blocking' : ''}`
 
@@ -188,4 +209,20 @@ function generateLinkHeader(head: string[], options): string {
   }
 
   return linkHeader
+}
+
+/**
+ * Determines whether `srcset` contains only multiple URL instances of `href`
+ *
+ * Nuxt Image can add redundant URLs
+ * @param href
+ * @param srcset
+ * @returns `true` if `srcset` is redundant (all URLs match href), `false` otherwise
+ */
+function isSrcsetSame(href: string, srcset: string): boolean {
+  // Split srcset into individual sources (URL + descriptor)
+  const sources = srcset.split(',').map(s => s.trim().split(/\s+/)[0]) // take only URL part
+
+  // Check if any URL differs from href
+  return sources.every(url => url === href)
 }
