@@ -19,7 +19,7 @@ export default defineNitroPlugin(async (nitroApp: NitroApp) => {
         preload: true,
         module_preload: true,
         prefetch: false,
-        images: false,
+        images: true,
         fonts: false,
         scripts: true,
         dns_prefetch: true,
