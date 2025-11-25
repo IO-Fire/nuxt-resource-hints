@@ -35,4 +35,15 @@ describe('ssr', async () => {
       },
     })
   })
+
+  it('not return nottobeincluded preload in link header', async () => {
+    // Get response to a server-rendered page with `$fetch`.
+    await $fetch('/', {
+      onResponse: (response) => {
+        const link = response.response.headers.get('link')
+        // Ensure the unwanted preload type is NOT present in the link header.
+        expect(link).not.toContain('</nottobeincluded>; rel="preload"; as="nottobeincluded",')
+      },
+    })
+  })
 })
