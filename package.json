@@ -1,6 +1,6 @@
 {
   "name": "nuxt-resource-hints",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Nuxt module that adds HTTP header resource hints for resources in your Nuxt App.",
   "repository": "IO-Fire/nuxt-resource-hints",
   "keywords": [
@@ -36,7 +36,7 @@
     "dev": "nuxi dev playground",
     "dev:build": "nuxi build playground",
     "dev:prepare": "nuxt-module-build build --stub && nuxt-module-build prepare && nuxi prepare playground",
-    "release": "npm run lint && npm run test && npm run prepack && changelogen --release && git push --follow-tags",
+    "release": "npm run lint && npm run test && npm run prepack && changelogen --release",
     "lint": "eslint .",
     "test": "vitest run",
     "test:watch": "vitest watch",
