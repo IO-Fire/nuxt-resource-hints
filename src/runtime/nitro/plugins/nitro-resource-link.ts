@@ -138,8 +138,8 @@ function generateLinkHeader(head: string[], options): string {
             // `preload` prop adds `<link>` tag in `<head>`
             // Image v2 includes `imagesrcset` in `<link>` tag
             // ```vue
-            // <NuxtImg href='...' preload />
-            // <NuxtImg href='...' :preload='{ fetchPriority: '...' }' />
+            // <NuxtImg href="..." preload />
+            // <NuxtImg href="..." :preload="{ fetchPriority: '...' }" />
             // ```
             // https://image.nuxt.com/usage/nuxt-img#preload
             // ```html

@@ -168,9 +168,9 @@ Learn more about preloading images at [https://web.dev/articles/preload-responsi
 > Links are only created when using [`preload`](https://image.nuxt.com/usage/nuxt-img#preload) on <NuxtImg>.
 
 ```vue
-<NuxtImg src='...' preload />
-<NuxtImg src='...' :preload='{ fetchPriority: 'low' }' />
-<NuxtImg src='...' :preload='{ fetchPriority: 'high' }' />
+<NuxtImg src="..." preload />
+<NuxtImg src="..." :preload="{ fetchPriority: 'low' }" />
+<NuxtImg src="..." :preload="{ fetchPriority: 'high' }" />
 ```
 
 ```html
