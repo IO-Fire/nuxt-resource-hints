@@ -94,64 +94,94 @@ export default defineNitroPlugin(async (nitroApp: NitroApp) => {
  * @param options
  * @returns `</...>; rel="..."; as="..."; crossorigin; fetchpriority="...", ...`
  */
-function generateLinkHeader(head: string[], options): string | '' {
-  const link_regex = /<link\s([^>]+)>/g
+function generateLinkHeader(head: string[], options): string {
+  const linkRegex = /<link\s([^>]+)>/g
+
+  /**
+   * Regex pattern components:
+   * - rel, href, as, fetchpriority: standard attributes requiring non-empty values
+   * - crossorigin: captures both presence and optional value (empty string allowed)
+   * Case-insensitive to handle attribute name variations
+   */
+  const attrRegex = /\brel="(?<rel>[^"]+)"|\bhref="(?<href>[^"]+)"|\bas="(?<as>[^"]+)"|\b(?<crossoriginKey>crossorigin)(?:="(?<crossoriginValue>[^"]*)")?|\bfetchpriority="(?<fetchpriority>[^"]+)"/gi
+
   let linkHeader = ''
 
-  for (let i = 0; i < head.length; i++) {
+  for (const headChildElem of head) {
     let match
-
-    while ((match = link_regex.exec(head[i])) !== null) {
+    while ((match = linkRegex.exec(headChildElem)) !== null) {
       const attributes = match[1]
-      const relMatch = attributes.match(/rel="([^"]+)"/)
-      const hrefMatch = attributes.match(/href="([^"]+)"/)
-      const asMatch = attributes.match(/as="([^"]+)"/)
-      const crossoriginMatch = attributes.match(/crossorigin(?:="([^"]*)")?/)
-      const fetchpriorityMatch = attributes.match(/fetchpriority="([^"]+)"/i) // Case insensitive
-      let blocking = false
+      const result: Record<string, string | undefined> = {}
 
-      if (relMatch && hrefMatch) {
-        let rel = relMatch[1]
-        let as = asMatch ? asMatch[1] : null
-        // Only `stylesheet`, `dns_prefetch` and `preconnect` are enabled.
-        // Browser will prioritise other resources higher than CSS (which is render blocking) until the `blocking` param is standard in browsers https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Link#browser_compatibility
+      // Single pass to extract all attributes
+      for (const m of attributes.matchAll(attrRegex)) {
+        for (const [key, value] of Object.entries(m.groups || {})) {
+          // Only merge values that exist to prevent overwriting with undefined
+          if (value) result[key] = value
+        }
+      }
+
+      if (result.rel && result.href) {
+        // Derive includePreload for granular per-type toggles
+        let includePreload = false
+        if (result.rel === 'preload') {
+          if (result.as === 'script' && options.resources.scripts) {
+            includePreload = true
+          }
+          else if (result.as === 'font' && options.resources.fonts) {
+            includePreload = true
+          }
+          else if (result.as === 'image' && options.resources.images) {
+            includePreload = true
+          }
+          else if (result.as === 'style' && options.resources.stylesheet) {
+            includePreload = true
+          }
+        }
+
         const includeResource
-          = (options.resources.stylesheet && rel === 'stylesheet')
-            || (options.resources.preload && rel === 'preload')
-            || (options.resources.module_preload && rel === 'modulepreload')
-            || (options.resources.prefetch && rel === 'prefetch')
-            || (options.resources.images && as === 'image')
-            || (options.resources.fonts && as === 'font')
-            || (options.resources.scripts && as === 'script')
-            || (options.resources.dns_prefetch && rel === 'dns-prefetch')
-            || (options.resources.preconnect && rel === 'preconnect')
+          = (options.resources.stylesheet && result.rel === 'stylesheet')
+            || includePreload
+            || (options.resources.module_preload && result.rel === 'modulepreload')
+            || (options.resources.prefetch && result.rel === 'prefetch')
+            || (options.resources.dns_prefetch && result.rel === 'dns-prefetch')
+            || (options.resources.preconnect && result.rel === 'preconnect')
 
         if (includeResource) {
+          // Determine if blocking is needed
+          let blocking = false
+
           // TODO ignore stylesheets with media queries or maybe allow 'all' or scope nuxt dir styles to be included or offer an exclude option for the media styles
 
           // infer style and prioritise styles
           // https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Link
           // 'stylesheet' is ignored by browser use `as="style" rel="preload" blocking` with `Initiator` in Network as `Other` rather than `Parser`
           // Currently `as="style" rel="preload"` causes browser console warning as styles don't count as used
-          if (rel === 'stylesheet') {
-            as = 'style'
-            rel = 'preload'
+          if (result.rel === 'stylesheet') {
+            result.as = 'style'
+            result.rel = 'preload'
             blocking = true
           }
 
-          const link = `<${hrefMatch[1]}>; rel="${rel}"${as ? `; as="${as}"` : ''}${crossoriginMatch ? '; crossorigin' : ''}${fetchpriorityMatch ? `; fetchpriority="${fetchpriorityMatch[1]}"` : ''}${blocking ? `; blocking` : ''}`
+          const link = `<${result.href}>; rel="${result.rel}"${
+            result.as ? `; as="${result.as}"` : ''}${
+            result.crossoriginKey
+              // Handle crossorigin attribute presence and value
+              // If value is empty or 'anonymous', use shorthand `crossorigin`
+              ? `; crossorigin${(
+                (!result.crossoriginValue || result.crossoriginValue === 'anonymous')
+                  ? ''
+                  : `="${result.crossoriginValue}"`)}`
+              : ''}${
+            result.fetchpriority ? `; fetchpriority="${result.fetchpriority}"` : ''}${
+            blocking ? '; blocking' : ''}`
 
           // Build Link string
           if (linkHeader.length + link.length + 2 >= options.headerLength) {
             // TODO: Consider adding multiple link headers for more length
             return linkHeader
           }
-          if (linkHeader !== '') {
-            linkHeader += ', ' + link
-          }
-          else {
-            linkHeader += link
-          }
+          linkHeader += linkHeader ? `, ${link}` : link
         }
       }
     }
