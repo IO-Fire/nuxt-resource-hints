@@ -12,8 +12,8 @@ Find and replace all on all files (CMD+SHIFT+F):
 [![npm version][npm-version-src]][npm-version-href]
 [![npm downloads][npm-downloads-src]][npm-downloads-href]
 [![License][license-src]][license-href]
-[![Nuxt][nuxt-src]][nuxt-href]
 [![CodeRabbit][coderabbit-pr-reviews]][coderabbit-pr-reviews-href]
+[![Nuxt][nuxt-src]][nuxt-href]
 
 Nuxt module that adds HTTP header resource hints for resources in your Nuxt App. 
 
