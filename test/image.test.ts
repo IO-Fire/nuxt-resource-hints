@@ -30,7 +30,7 @@ describe('ssr', async () => {
         /**
          * Link to image with `<href>`, `imagesrcset`, `fetchpriority`
          */
-        expect(link).toMatch(/^<.+[^>]>; rel="preload"; as="image"; imagesrcset=".+[^"]"; fetchpriority="high", /)
+        expect(link).toMatch(/<.+[^>]\/blog\/woman-hat\.jpg.+[^>]>; rel="preload"; as="image"; imagesrcset=".+[^"]"; fetchpriority="high", /)
       },
     })
   })
