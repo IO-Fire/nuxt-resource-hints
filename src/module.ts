@@ -1,4 +1,9 @@
-import { defineNuxtModule, addServerPlugin, createResolver, useNitro } from '@nuxt/kit'
+import {
+  defineNuxtModule,
+  addServerPlugin,
+  createResolver,
+  useNitro
+} from '@nuxt/kit'
 import { createDefu } from 'defu'
 
 // Module options TypeScript interface definition
@@ -16,7 +21,7 @@ const defuReplaceArray = createDefu((obj, key, value) => {
 export default defineNuxtModule<ModuleOptions>({
   meta: {
     name: 'resource-hints',
-    configKey: 'resourceHints',
+    configKey: 'resourceHints'
   },
   // Default configuration options of the Nuxt module
   defaults: {},
@@ -34,29 +39,29 @@ export default defineNuxtModule<ModuleOptions>({
         nitro.options.serverAssets.push({
           baseName: 'nuxt-resource-hints',
           dir: createResolver(_nuxt.options.buildDir).resolve(
-            './nuxt-resource-hints',
-          ),
+            './nuxt-resource-hints'
+          )
         })
 
         // In some Nitro presets (e.g. Vercel), the header rules are generated for the static server
         // By default we update the nitro headers route rules with their calculated value to support this possibility
-        const preRenderedHeaders
-          = (await nitro.storage.getItem<Record<string, Record<string, string>>>(
-            'build:nuxt-resource-hints:headers.json',
+        const preRenderedHeaders =
+          (await nitro.storage.getItem<Record<string, Record<string, string>>>(
+            'build:nuxt-resource-hints:headers.json'
           )) || {}
 
         const preRenderedHeadersRouteRules = Object.fromEntries(
           Object.entries(preRenderedHeaders).map(([route, headers]) => [
             route,
-            { headers },
-          ]),
+            { headers }
+          ])
         )
         const n = useNitro()
         n.options.routeRules = defuReplaceArray(
           preRenderedHeadersRouteRules,
-          n.options.routeRules,
+          n.options.routeRules
         )
       })
     })
-  },
+  }
 })
