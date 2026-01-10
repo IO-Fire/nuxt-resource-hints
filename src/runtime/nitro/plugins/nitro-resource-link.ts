@@ -171,6 +171,7 @@ function generateLinkHeader(head: string[], options): string {
         if (includeResource) {
           // Determine if blocking is needed
           let blocking = false
+          let fetchpriorityOverride: null | string = null
 
           // TODO ignore stylesheets with media queries or maybe allow 'all' or scope nuxt dir styles to be included or offer an exclude option for the media styles
 
@@ -182,6 +183,7 @@ function generateLinkHeader(head: string[], options): string {
             result.as = 'style'
             result.rel = 'preload'
             blocking = true
+            fetchpriorityOverride = 'high'
           }
 
           const link = `<${result.href}>; rel="${result.rel}"${
@@ -194,7 +196,7 @@ function generateLinkHeader(head: string[], options): string {
                   ? ''
                   : `="${result.crossoriginValue}"`)}`
               : ''}${result.imagesrcset ? `; imagesrcset="${result.imagesrcset}"` : ''}${
-            result.fetchpriority ? `; fetchpriority="${result.fetchpriority}"` : ''}${
+            fetchpriorityOverride || result.fetchpriority ? `; fetchpriority="${fetchpriorityOverride || result.fetchpriority}"` : ''}${
             blocking ? '; blocking' : ''}`
 
           // Build Link string

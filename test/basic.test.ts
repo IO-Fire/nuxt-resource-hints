@@ -18,7 +18,7 @@ describe('ssr', async () => {
     await $fetch('/', {
       onResponse: (response) => {
         const link = response.response.headers.get('link')
-        expect(link).toContain('</_nuxt/entry.xWPGQPTh.css>; rel="preload"; as="style"; crossorigin; blocking,')
+        expect(link).toContain('</_nuxt/entry.xWPGQPTh.css>; rel="preload"; as="style"; crossorigin; fetchpriority="high"; blocking,')
       },
     })
   })
