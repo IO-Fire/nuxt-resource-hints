@@ -12,6 +12,7 @@ Find and replace all on all files (CMD+SHIFT+F):
 [![npm version][npm-version-src]][npm-version-href]
 [![npm downloads][npm-downloads-src]][npm-downloads-href]
 [![License][license-src]][license-href]
+[![CodeRabbit][coderabbit-pr-reviews]][coderabbit-pr-reviews-href]
 [![Nuxt][nuxt-src]][nuxt-href]
 
 Nuxt module that adds HTTP header resource hints for resources in your Nuxt App. 
@@ -31,8 +32,9 @@ You can learn more about resources hints at:
 
 <!-- Highlight some of the features your module provide here -->
 - 🚀&nbsp;Faster Page Loading
-- ✅&nbsp;SSR Support
-- ✅&nbsp;SSG Support
+- ✅&nbsp;Nuxt 4 Support
+- ✅&nbsp;SSR+SSG Support
+- 🖼️&nbsp;Nuxt Image Support
 
 ## Quick Setup
 
@@ -150,6 +152,36 @@ The below image shows the Performance diagram, where the network requests start 
 </p>
 </details>
 
+## Nuxt Image
+
+Preload responsive images with Nuxt Image ([@nuxt/image](https://image.nuxt.com/)).
+
+Using the `<NuxtImg>` component and the [`preload`](https://image.nuxt.com/usage/nuxt-img#preload) prop.
+
+Nuxt Image's `<link>` tags are copied by `nuxt-resource-hints` to the Link header.
+
+Learn more about preloading images at [https://web.dev/articles/preload-responsive-images](https://web.dev/articles/preload-responsive-images). Use cases include images above (fetch priority high) and just below (fetch priority low) the fold / carousel.
+
+### Nuxt Image Example
+
+> [!IMPORTANT]
+> Links are only created when using [`preload`](https://image.nuxt.com/usage/nuxt-img#preload) on <NuxtImg>.
+
+```vue
+<NuxtImg src="..." preload />
+<NuxtImg src="..." :preload="{ fetchPriority: 'low' }" />
+<NuxtImg src="..." :preload="{ fetchPriority: 'high' }" />
+```
+
+```html
+<link rel="preload" as="image" href="..." imagesrcset="...">
+<link rel="preload" as="image" href="..." imagesrcset="..." fetchpriority="low">
+<link rel="preload" as="image" href="..." imagesrcset="..." fetchpriority="high">
+```
+
+> [!NOTE]
+> Recommend: Nuxt Image 2.0.0 or higher for `imagesrcset` support.
+
 ## Contribution
 
 <details>
@@ -198,5 +230,8 @@ The below image shows the Performance diagram, where the network requests start 
 [license-src]: https://img.shields.io/npm/l/nuxt-resource-hints.svg?style=flat&colorA=020420&colorB=00DC82
 [license-href]: https://npmjs.com/package/nuxt-resource-hints
 
-[nuxt-src]: https://img.shields.io/badge/Nuxt-020420?logo=nuxt.js
+[nuxt-src]: https://img.shields.io/badge/Nuxt-020420?logo=nuxt
 [nuxt-href]: https://nuxt.com
+
+[coderabbit-pr-reviews]: https://img.shields.io/coderabbit/prs/github/IO-Fire/nuxt-resource-hints?utm_source=oss&utm_medium=github&utm_campaign=IO-Fire%2Fnuxt-resource-hints&labelColor=020420&color=00DC82&link=https%3A%2F%2Fcoderabbit.ai&label=CodeRabbit+Reviews
+[coderabbit-pr-reviews-href]: https://www.coderabbit.ai/
