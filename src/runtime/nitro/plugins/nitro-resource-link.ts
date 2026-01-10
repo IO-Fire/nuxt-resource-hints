@@ -3,12 +3,9 @@ import type { NitroApp } from 'nitropack/types'
 import {
   getResponseHeaders,
   setResponseHeaders,
-  appendResponseHeader,
+  appendResponseHeader
 } from 'h3'
-import {
-  defineNitroPlugin,
-  useStorage,
-} from 'nitropack/runtime'
+import { defineNitroPlugin, useStorage } from 'nitropack/runtime'
 
 export default defineNitroPlugin(async (nitroApp: NitroApp) => {
   nitroApp.hooks.hook('render:html', (html, { event }) => {
@@ -23,9 +20,9 @@ export default defineNitroPlugin(async (nitroApp: NitroApp) => {
         fonts: false,
         scripts: true,
         dns_prefetch: true,
-        preconnect: true,
+        preconnect: true
       },
-      headerLength: 1990,
+      headerLength: 1990
     })
 
     if (link !== '') {
@@ -56,17 +53,16 @@ export default defineNitroPlugin(async (nitroApp: NitroApp) => {
             .map(([header, value]) => {
               if (Array.isArray(value)) {
                 return [header, value.join(';')]
-              }
-              else {
+              } else {
                 return [header, value]
               }
             })
           return [path, Object.fromEntries(headersEntries)]
-        }),
+        })
       )
       await useStorage('build:nuxt-resource-hints').setItem(
         'headers.json',
-        headers,
+        headers
       )
     })
   }
@@ -74,8 +70,8 @@ export default defineNitroPlugin(async (nitroApp: NitroApp) => {
   // Code source: https://github.com/nuxt-modules/security/blob/f824882c30875f65eba270df7c7b1f53fa4c6ad5/src/runtime/nitro/plugins/90-prerenderedHeaders.ts#L48-L61
   // Retrieve pre-rendered headers when in SSR mode
   else {
-    const preRenderedHeaders
-      = (await useStorage('assets:nuxt-resource-hints').getItem<
+    const preRenderedHeaders =
+      (await useStorage('assets:nuxt-resource-hints').getItem<
         Record<string, Record<string, string>>
       >('headers.json')) || {}
     nitroApp.hooks.hook('beforeResponse', (event) => {
@@ -103,7 +99,8 @@ function generateLinkHeader(head: string[], options): string {
    * - crossorigin: captures both presence and optional value (empty string allowed)
    * Case-insensitive to handle attribute name variations
    */
-  const attrRegex = /\brel="(?<rel>[^"]+)"|\bhref="(?<href>[^"]+)"|\bas="(?<as>[^"]+)"|\b(?<crossoriginKey>crossorigin)(?:="(?<crossoriginValue>[^"]*)")?|\bfetchpriority="(?<fetchpriority>[^"]+)"|\bimagesrcset="(?<imagesrcset>[^"]+)"/gi
+  const attrRegex =
+    /\brel="(?<rel>[^"]+)"|\bhref="(?<href>[^"]+)"|\bas="(?<as>[^"]+)"|\b(?<crossoriginKey>crossorigin)(?:="(?<crossoriginValue>[^"]*)")?|\bfetchpriority="(?<fetchpriority>[^"]+)"|\bimagesrcset="(?<imagesrcset>[^"]+)"/gi
 
   let linkHeader = ''
 
@@ -127,11 +124,9 @@ function generateLinkHeader(head: string[], options): string {
         if (result.rel === 'preload') {
           if (result.as === 'script' && options.resources.scripts) {
             includePreload = true
-          }
-          else if (result.as === 'font' && options.resources.fonts) {
+          } else if (result.as === 'font' && options.resources.fonts) {
             includePreload = true
-          }
-          else if (result.as === 'image' && options.resources.images) {
+          } else if (result.as === 'image' && options.resources.images) {
             includePreload = true
 
             // Nuxt Image v1 & v2
@@ -148,25 +143,25 @@ function generateLinkHeader(head: string[], options): string {
 
             // Only include `imagesrcset` if any URLs differ from `href`
             if (
-              result.imagesrcset
-              && isSrcsetSame(result.href, result.imagesrcset)
+              result.imagesrcset &&
+              isSrcsetSame(result.href, result.imagesrcset)
             ) {
               // Remove redundant imagesrcset
               result.imagesrcset = undefined
             }
-          }
-          else if (result.as === 'style' && options.resources.stylesheet) {
+          } else if (result.as === 'style' && options.resources.stylesheet) {
             includePreload = true
           }
         }
 
-        const includeResource
-          = (options.resources.stylesheet && result.rel === 'stylesheet')
-            || includePreload
-            || (options.resources.module_preload && result.rel === 'modulepreload')
-            || (options.resources.prefetch && result.rel === 'prefetch')
-            || (options.resources.dns_prefetch && result.rel === 'dns-prefetch')
-            || (options.resources.preconnect && result.rel === 'preconnect')
+        const includeResource =
+          (options.resources.stylesheet && result.rel === 'stylesheet') ||
+          includePreload ||
+          (options.resources.module_preload &&
+            result.rel === 'modulepreload') ||
+          (options.resources.prefetch && result.rel === 'prefetch') ||
+          (options.resources.dns_prefetch && result.rel === 'dns-prefetch') ||
+          (options.resources.preconnect && result.rel === 'preconnect')
 
         if (includeResource) {
           // Determine if blocking is needed
@@ -185,17 +180,23 @@ function generateLinkHeader(head: string[], options): string {
           }
 
           const link = `<${result.href}>; rel="${result.rel}"${
-            result.as ? `; as="${result.as}"` : ''}${
+            result.as ? `; as="${result.as}"` : ''
+          }${
             result.crossoriginKey
-              // Handle crossorigin attribute presence and value
-              // If value is empty or 'anonymous', use shorthand `crossorigin`
-              ? `; crossorigin${(
-                (!result.crossoriginValue || result.crossoriginValue === 'anonymous')
-                  ? ''
-                  : `="${result.crossoriginValue}"`)}`
-              : ''}${result.imagesrcset ? `; imagesrcset="${result.imagesrcset}"` : ''}${
-            result.fetchpriority ? `; fetchpriority="${result.fetchpriority}"` : ''}${
-            blocking ? '; blocking' : ''}`
+              ? // Handle crossorigin attribute presence and value
+                // If value is empty or 'anonymous', use shorthand `crossorigin`
+                `; crossorigin${
+                  !result.crossoriginValue ||
+                  result.crossoriginValue === 'anonymous'
+                    ? ''
+                    : `="${result.crossoriginValue}"`
+                }`
+              : ''
+          }${result.imagesrcset ? `; imagesrcset="${result.imagesrcset}"` : ''}${
+            result.fetchpriority
+              ? `; fetchpriority="${result.fetchpriority}"`
+              : ''
+          }${blocking ? '; blocking' : ''}`
 
           // Build Link string
           if (linkHeader.length + link.length + 2 >= options.headerLength) {
@@ -221,8 +222,8 @@ function generateLinkHeader(head: string[], options): string {
  */
 function isSrcsetSame(href: string, srcset: string): boolean {
   // Split srcset into individual sources (URL + descriptor)
-  const sources = srcset.split(',').map(s => s.trim().split(/\s+/)[0]) // take only URL part
+  const sources = srcset.split(',').map((s) => s.trim().split(/\s+/)[0]) // take only URL part
 
   // Check if any URL differs from href
-  return sources.every(url => url === href)
+  return sources.every((url) => url === href)
 }

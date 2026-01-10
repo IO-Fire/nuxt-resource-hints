@@ -1,0 +1,20 @@
+# Nuxt dev/build outputs
+.output
+.data
+.nuxt
+.nitro
+.cache
+dist
+.wrangler
+
+# Node dependencies
+node_modules
+.pnpm-store
+pnpm-lock.yaml
+
+# Logs
+logs
+*.log
+
+# ESLint
+.eslintcache

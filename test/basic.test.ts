@@ -4,7 +4,7 @@ import { setup, $fetch } from '@nuxt/test-utils/e2e'
 
 describe('ssr', async () => {
   await setup({
-    rootDir: fileURLToPath(new URL('./fixtures/basic', import.meta.url)),
+    rootDir: fileURLToPath(new URL('./fixtures/basic', import.meta.url))
   })
 
   it('renders the index page', async () => {
@@ -18,8 +18,10 @@ describe('ssr', async () => {
     await $fetch('/', {
       onResponse: (response) => {
         const link = response.response.headers.get('link')
-        expect(link).toContain('</_nuxt/entry.xWPGQPTh.css>; rel="preload"; as="style"; crossorigin; blocking,')
-      },
+        expect(link).toContain(
+          '</_nuxt/entry.xWPGQPTh.css>; rel="preload"; as="style"; crossorigin; blocking,'
+        )
+      }
     })
   })
 
@@ -28,11 +30,19 @@ describe('ssr', async () => {
     await $fetch('/', {
       onResponse: (response) => {
         const link = response.response.headers.get('link')
-        expect(link).toContain('</test-crossorigin-use-credentials.js>; rel="preload"; as="script"; crossorigin="use-credentials",')
-        expect(link).toContain('</test-crossorigin-empty.js>; rel="preload"; as="script"; crossorigin,')
-        expect(link).toContain('</test-crossorigin-anonymous.js>; rel="preload"; as="script"; crossorigin,')
-        expect(link).toContain('</test-crossorigin-none.js>; rel="preload"; as="script",')
-      },
+        expect(link).toContain(
+          '</test-crossorigin-use-credentials.js>; rel="preload"; as="script"; crossorigin="use-credentials",'
+        )
+        expect(link).toContain(
+          '</test-crossorigin-empty.js>; rel="preload"; as="script"; crossorigin,'
+        )
+        expect(link).toContain(
+          '</test-crossorigin-anonymous.js>; rel="preload"; as="script"; crossorigin,'
+        )
+        expect(link).toContain(
+          '</test-crossorigin-none.js>; rel="preload"; as="script",'
+        )
+      }
     })
   })
 
@@ -42,8 +52,10 @@ describe('ssr', async () => {
       onResponse: (response) => {
         const link = response.response.headers.get('link')
         // Ensure the unwanted preload type is NOT present in the link header.
-        expect(link).not.toContain('</nottobeincluded>; rel="preload"; as="nottobeincluded",')
-      },
+        expect(link).not.toContain(
+          '</nottobeincluded>; rel="preload"; as="nottobeincluded",'
+        )
+      }
     })
   })
 })
