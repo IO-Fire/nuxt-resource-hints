@@ -30,6 +30,8 @@ export default defineNitroPlugin(async (nitroApp: NitroApp) => {
 
     if (link !== '') {
       appendResponseHeader(event, 'link', link)
+      // TODO: Check if enabled in module options and if CF_PAGES=1 when 'auto'
+      html.head.push(`<link rel="preload" as="script" href="cf-pages://hints">`)
     }
   })
 
