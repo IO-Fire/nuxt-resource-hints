@@ -43,23 +43,23 @@
     "test:types": "vue-tsc --noEmit && cd playground && vue-tsc --noEmit"
   },
   "dependencies": {
-    "defu": "^6.1.4",
+    "defu": "^6.1.7",
     "@nuxt/kit": "^4.4.2"
   },
   "devDependencies": {
-    "@nuxt/devtools": "3.2.3",
-    "@nuxt/eslint-config": "1.15.2",
-    "@nuxt/image": "2.0.0",
-    "@nuxt/module-builder": "1.0.2",
+    "@nuxt/devtools": "3.4.2",
+    "@nuxt/eslint-config": "1.17.0",
+    "@nuxt/image": "2.1.0",
+    "@nuxt/module-builder": "1.0.3",
     "@nuxt/schema": "4.4.2",
-    "@nuxt/test-utils": "4.0.0",
+    "@nuxt/test-utils": "4.2.0",
     "@types/node": "latest",
     "changelogen": "0.6.2",
-    "eslint": "9.39.4",
+    "eslint": "9.39.5",
     "nuxt": "4.4.2",
     "typescript": "5.9.3",
-    "vitest": "4.1.0",
-    "vue-tsc": "3.2.5"
+    "vitest": "4.1.11",
+    "vue-tsc": "3.3.11"
   },
   "unbuild": {
     "externals": [
@@ -69,5 +69,5 @@
   "publishConfig": {
     "provenance": true
   },
-  "packageManager": "pnpm@10.32.1"
+  "packageManager": "pnpm@10.34.5"
 }
